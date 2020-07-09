@@ -45,11 +45,7 @@ CAN Bus network is limited to 110 nodes, so there is a lot of room for more devi
 network incase other modules will be added
 
 ## System Operation
-The ESP8266 client speaks to the server through a TCP socket. In order to run some test
-code, every ten seconds a message is encoded in ISO/IEC 8859-1 encoding (LATIN-1) on the
-STM32 MCU and is then sent over the CAN Bus to the ESP8266. The message being sent for
-Device Number Message Type testing purposes is “SYSSTART”. Once received by the ESP8266, this fires an interrupt on the RX0_INT line on the ESP8266 to let the MCU know there is a message in the buffer of the MCP2515. This message is then read by the ESP8266 through the SPI interface to the controller
-and is then sent to the server over the opened TCP socket.
+Both MCUs are using **FreeRTOS** in order to run a scheduler of tasks. The STM32 will have two tasks when completed, it will run the quadra-pods movement as well at handle communication through the CAN Bus between the ESP8266. The ESP8266 runs three tasks, one task to handle received messages from the server, one task to send messages to the server and the last task will communicate over the CAN Bus. The ESP8266 client speaks to the server through a TCP socket. In order to run some test code, every ten seconds a message is encoded in ISO/IEC 8859-1 encoding (LATIN-1) on the STM32 MCU and is then sent over the CAN Bus to the ESP8266. The message being sent for Device Number Message Type testing purposes is “SYSSTART”. Once received by the ESP8266, this fires an interrupt on the RX0_INT line on the ESP8266 to let the MCU know there is a message in the buffer of the MCP2515. This message is then read by the ESP8266 through the SPI interface to the controller and is then sent to the server over the opened TCP socket.
 
 In order to create the server, simple Python code was used to create a command line
 interface. The program displays the messages from the ESP8266 client on the terminal and then
